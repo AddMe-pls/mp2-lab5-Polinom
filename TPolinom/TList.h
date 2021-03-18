@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 template <class T>
 struct TLink
 {
@@ -11,6 +12,9 @@ struct TMonom
 	double coeff;
 	int x, y, z;
 	bool operator < (const TMonom& m);
+	bool operator > (const TMonom& m);
+	bool operator == (const TMonom& m);
+	TMonom();
 };
 
 bool TMonom::operator < (const TMonom& m)
@@ -20,16 +24,44 @@ bool TMonom::operator < (const TMonom& m)
 	return (s < s1) ? true : false;
 }
 
+bool TMonom::operator > (const TMonom& m)
+{
+	int s = x + y + z;
+	int s1 = m.x + m.y + m.z;
+	return (s > s1) ? true : false;
+}
+
+bool TMonom::operator == (const TMonom& m)
+{
+	int s = x + y + z;
+	int s1 = m.x + m.y + m.z;
+	return (s == s1) ? true : false;
+}
+
+TMonom::TMonom()
+{
+	x = 0;
+	y = 0;
+	z = 0;
+	coeff = 0;
+}
+
 template <class T>
 class TList
 {
 protected:
-	TLink<T>* pFirst, * pLast, * pCurr, * pPrev, * pStop;
-	int size, pos;
+	TLink<T>* pFirst;
+	TLink<T>* pLast;
+	TLink<T>* pCurr;
+	TLink<T>* pPrev;
+	TLink<T>* pStop;
+	int size;
+	int pos;
 public:
+	
 	TList()
 	{
-		pStop = nullptr;
+		pStop = NULL;
 		pFirst = pStop;
 		pLast = pFirst;
 		//pCurr = pStop;
@@ -53,14 +85,14 @@ public:
 	{
 		if (l.pFirst == l.pStop)
 		{
-			pStop = nullptr;
+			pStop = NULL;
 			pFirst = pStop;
 			pLast = pFirst;
 			size = 0;
 		}
 		else
 		{
-			pStop = nullptr;
+			pStop = NULL;
 			size = l.size;
 			TLink<T>* tmp = new TLink<T>;
 			tmp->val = l.pFirst->val;
@@ -153,7 +185,7 @@ public:
 			InsLast(elem);
 		else
 			if (pCurr == pFirst)
-				InsFirs(elem);
+				InsFirst(elem);
 			else
 			{
 				TLink<T>* t = new TLink<T>;
@@ -163,5 +195,151 @@ public:
 				size++;
 			}
 	}
+	T GetCurr()
+	{
+		return pCurr->val;
+	}
+	void SetCurr(T elem)
+	{
+		pCurr->val = elem;
+	}
+	void Reset()
+	{
+		pCurr = pFirst;
+		//pPrev = pCurr;
+		//pCurr = pCurr->pNext;
+	}
+	bool IsEnd()
+	{
+		if (pCurr->pNext == pStop)
+			return true;
+		else return false;
+	}
+	void GoNext()
+	{
+		pPrev = pCurr;
+		pCurr = pCurr->pNext;
+	}
 };
 
+//template <class T>
+//class THeadList : public TList<T>
+//{
+//protected:
+//	TLink<T>* pHead;
+//public:
+//	THeadList() :TList()
+//	{
+//		TLink<T>* t = new TLink<T>;
+//		pHead = t;
+//		pStop = pHead;
+//		pHead->pNext = pHead;
+//    }
+//	void InsFirst(T elem)
+//	{
+//		TList::InsFirst(elem);
+//		pHead->pNext = pFirst;
+//	}
+//	~THeadList()
+//	{
+//		TLink<T>* tmp;
+//		while (pFirst != pStop)
+//		{
+//			tmp = pFirst->pNext;
+//			delete pFirst;
+//			pFirst = tmp;
+//		}
+//		pLast = pFirst;
+//		size = 0;
+//		delete pHead;
+//	}
+//};
+
+//class TPolinom : public THeadList<TMonom>
+//{
+//	TMonom mon;
+//public:
+//	TPolinom() :THeadList()
+//	{
+//		mon.z = -1;
+//		pHead->val = mon;
+//	}
+//	void InsMonom(TMonom& m)
+//	{
+//		for (Reset(); !IsEnd(); GoNext())
+//		{
+//			if (m > pCurr->val)
+//			{
+//				InsCurr(m);
+//				break;
+//			}
+//			else
+//			{
+//				if (m == pCurr->val)
+//					if (m.coeff + pCurr->val.coeff == 0)
+//					{
+//						DelCurr();
+//						break;
+//					}
+//					else
+//					{
+//						pCurr->val.coeff += m.coeff;
+//						break;
+//					}
+//			}
+//		}
+//		if (pCurr == pStop)
+//			InsLast(m);
+//	}
+//	TPolinom& operator += (TPolinom& p)
+//	{
+//		for (p.Reset(); !p.IsEnd(); p.GoNext())
+//		{
+//			InsMonom(p.pCurr->val);
+//			return *this;
+//		}
+//	}
+//	void operator += (const TPolinom& p)
+//	{
+//		Reset();
+//		TLink<TMonom>* curr = p.pFirst;
+//		while (curr != p.pStop)
+//		{
+//			if (pCurr->val < curr->val)
+//			{
+//				InsCurr(curr->val);
+//				curr = curr->pNext;
+//			}
+//			else
+//			{
+//				if (pCurr->val == curr->val)
+//				{
+//					double tmp = pCurr->val.coeff + curr->val.coeff;
+//					pCurr->val.coeff = tmp;
+//					if (tmp)
+//					{
+//						GoNext();
+//					}
+//					else
+//					{
+//						DelCurr();
+//						curr = curr->pNext;
+//					}
+//				}
+//				else GoNext();
+//			}
+//		}
+//	}
+//	TPolinom& operator = (TPolinom& p)
+//	{
+//		if (this == &p)
+//			return *this;
+//		while (pFirst != pStop)
+//			DelFirst();
+//		for (p.Reset(); !p.IsEnd(); p.GoNext())
+//		{
+//			InsLast(p.pCurr->val);
+//			return *this;
+//		}
+//	}
+//};
