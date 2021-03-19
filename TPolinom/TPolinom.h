@@ -4,14 +4,15 @@ class TPolinom : public THeadList<TMonom>
 {
 	TMonom mon;
 public:
-	TPolinom() :THeadList()
+	TPolinom() :THeadList<TMonom>()
 	{
 		mon.z = -1;
 		pHead->val = mon;
 	}
 	void InsMonom(TMonom& m)
 	{
-		for (Reset(); !IsEnd(); GoNext())
+		Reset();
+		while(true)
 		{
 			if (m > pCurr->val)
 			{
@@ -20,7 +21,7 @@ public:
 			}
 			else
 			{
-				if (m == pCurr->val)
+				if (m == pCurr->val) {
 					if (m.coeff + pCurr->val.coeff == 0)
 					{
 						DelCurr();
@@ -31,20 +32,30 @@ public:
 						pCurr->val.coeff += m.coeff;
 						break;
 					}
+				}
+				else
+				{
+					if (pCurr == pStop)
+					{
+						InsLast(m);
+						break;
+					}
+				}
+				GoNext();
 			}
 		}
-		if (pCurr == pStop)
-			InsLast(m);
+		/*if (pCurr == pStop)
+			InsLast(m);*/
 	}
-	TPolinom& operator += (TPolinom& p)
+	/*TPolinom& operator += (TPolinom& p)
 	{
 		for (p.Reset(); !p.IsEnd(); p.GoNext())
 		{
 			InsMonom(p.pCurr->val);
 			return *this;
 		}
-	}
-	void operator += (const TPolinom& p)
+	}*/
+	TPolinom& operator += (const TPolinom& p)
 	{
 		Reset();
 		TLink<TMonom>* curr = p.pFirst;
@@ -74,6 +85,27 @@ public:
 				else GoNext();
 			}
 		}
+		return *this;
+	}
+	TPolinom& operator *= (TPolinom& p)
+	{
+		for (Reset(); !IsEnd(); GoNext())
+		{
+			TLink<TMonom>* curr = p.pFirst;
+			TPolinom tmp;
+			while (curr != p.pStop)
+			{
+				TMonom tmp1;
+				tmp1.coeff = pCurr->val.coeff * curr->val.coeff;
+				tmp1.x = pCurr->val.x * curr->val.x;
+				tmp1.y = pCurr->val.y * curr->val.y;
+				tmp1.z = pCurr->val.z * curr->val.z;
+				tmp.InsLast(tmp1);
+				curr = curr->pNext;
+			}
+			*this += tmp;
+		}
+		return *this;
 	}
 	TPolinom& operator = (TPolinom& p)
 	{
@@ -86,5 +118,18 @@ public:
 			InsLast(p.pCurr->val);
 			return *this;
 		}
+	}
+	void print()
+	{
+		TLink<TMonom> *t = pFirst;
+		while (size != 0)
+		{
+			if (t->val.coeff != 0) {
+				std::cout << t->val << " ";
+				t = t->pNext;
+				size--;
+			}
+		}
+		std::cout<<std::endl;
 	}
 };
