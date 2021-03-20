@@ -77,7 +77,6 @@ public:
 	}
 	void InsFirst(T elem)
 	{
-		size++;
 		if (size == 0)
 		{
 			pFirst = new TLink<T>;
@@ -92,6 +91,7 @@ public:
 			t->val = elem;
 			pFirst = t;
 		}
+		size++;
 	}
 	void InsLast(T elem)
 	{

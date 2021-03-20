@@ -14,6 +14,11 @@ public:
 		Reset();
 		while(true)
 		{
+			if (pCurr == pStop)
+			{
+				InsLast(m);
+				break;
+			}
 			if (m > pCurr->val)
 			{
 				InsCurr(m);
@@ -33,15 +38,32 @@ public:
 						break;
 					}
 				}
-				else
+				GoNext();
+			}
+		}
+/*		for (Reset(); !IsEnd(); GoNext())
+		{
+			if (m > pCurr->val)
+			{
+				InsCurr(m);
+				break;
+			}
+			else {
+				if (m == pCurr->val)
 				{
-					if (pCurr == pStop)
+					if (m.coeff + pCurr->val.coeff == 0)
 					{
-						InsLast(m);
+						DelCurr();
+						break;
+					}
+					else
+					{
+						pCurr->val.coeff += m.coeff;
 						break;
 					}
 				}
-				GoNext();
+				if (pCurr == pStop)
+					InsLast(m);
 			}
 		}
 		/*if (pCurr == pStop)

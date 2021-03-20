@@ -13,6 +13,7 @@ public:
 	void DelFirst();
 	void InsLast(T elem);
 	void InsCurr(T elem);
+	void DelCurr();
 	~THeadList();
 };
 
@@ -54,10 +55,17 @@ void THeadList<T>::InsLast(T elem)
 {
 	TList<T>::InsLast(elem);
 	pHead->pNext = this->pFirst;
-}template<class T>
+}
+template<class T>
 void THeadList<T>::InsCurr(T elem)
 {
 	TList<T>::InsCurr(elem);
+	pHead->pNext = this->pFirst;
+}
+template<class T>
+void THeadList<T>::DelCurr()
+{
+	TList<T>::DelCurr();
 	pHead->pNext = this->pFirst;
 }
 template <class T>
