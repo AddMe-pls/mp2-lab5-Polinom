@@ -15,13 +15,12 @@ int main()
     TMonom m1, m2, m3;
     std::cin >> m1>>m2>>m3;
     TPolinom p1;
-    p1.InsMonom(m1); p1.InsMonom(m2); p1.InsMonom(m3);
+    p1.InsMonom(m1), p1.InsMonom(m2); p1.InsMonom(m3);
     std::cout << "Polinom 1 size 3: " << p1;
     std::cout << std::endl;
     std::cin >> m1 >> m2 >> m3;
-    std::cout << std::endl;
     TPolinom p2;
-    p2.InsMonom(m1); p2.InsMonom(m2); p2.InsMonom(m3);
+    p2.InsMonom(m1), p2.InsMonom(m2); p2.InsMonom(m3);
     std::cout << "Polinom 2 size 3: " << p2;
     std::cout << std::endl;
     p1 += p2;

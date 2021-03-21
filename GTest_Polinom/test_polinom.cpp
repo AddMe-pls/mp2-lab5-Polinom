@@ -36,7 +36,6 @@ TEST(TList, can_get_link_value)
 	TList<int> list;
 	list.InsCurr(5);
 	list.Reset();
-	//list.InsCurr(6);
 	ASSERT_NO_THROW(list.GetCurr());
 }
 

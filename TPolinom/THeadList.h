@@ -4,8 +4,7 @@ template <class T>
 class THeadList : public TList<T>
 {
 protected:
-	TLink<T>* pHead; //*pFirst, *pLast, *pStop;
-	//int size;
+	TLink<T>* pHead;
 public:
 	THeadList();
 	THeadList(const THeadList<T>& l);
@@ -28,15 +27,32 @@ THeadList<T>::THeadList() : TList<T>()
 	//this->pStop = NULL;
 }
 template<class T>
-THeadList<T>::THeadList(const THeadList<T>& l) : TList<T>()
+THeadList<T>::THeadList(const THeadList<T>& h) : TList<T>()
 {
-	TLink<T>* t = new TLink<T>;
-	this->pHead = t;
-	this->pStop->pNext = this->pHead;
-	if (this->pFirst != NULL)
-		this->pHead->pNext = this->pFirst; // ???
-	else
-		this->pHead->pNext = this->pStop;
+	pHead = new TLink<T>;
+	TList<T>::pStop = TList<T>::pFirst = TList<T>::pLast = TList<T>::pPrev = TList<T>::pCurr = pHead;
+	pHead->pNext = TList<T>::pStop;
+	if (h.size)
+	{
+		TLink<T>* prev = new TLink<T>;
+		pHead->pNext = prev;
+		TList<T>::pFirst = prev;
+		TList<T>::pFirst->val = h.pFirst->val;
+		TList<T>::pFirst->pNext = TList<T>::pStop;
+		TLink<T>* curr = h.pFirst->pNext;
+		while (curr != h.pStop)
+		{
+			TLink<T>* t = new TLink<T>;
+			t->val = curr->val;
+			t->pNext = TList<T>::pStop;
+			prev->pNext = t;
+			prev = t;
+			curr = curr->pNext;
+		}
+		TList<T>::pLast = prev;
+	}
+	TList<T>::size = h.size;
+	TList<T>::pos = 0;
 }
 template <class T>
 void THeadList<T>::InsFirst(T elem)

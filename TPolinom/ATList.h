@@ -36,33 +36,36 @@ public:
 		pLast = pFirst;
 		size = 0;
 	}
-	TList(const TList<T>& l)
+	TList(const TList<T>& list)
 	{
-		if (l.pFirst == l.pStop)
+		if (list.size == 0)
 		{
-			pStop = NULL;
-			pFirst = pStop;
-			pLast = pFirst;
+			pStop = list.pStop;
+			pFirst = pLast = pCurr = pPrev = pStop;
 			size = 0;
+			pos = 0;
 		}
 		else
 		{
-			pStop = NULL;
-			size = l.size;
-			TLink<T>* tmp = new TLink<T>;
-			tmp->val = l.pFirst->val;
-			pFirst = tmp;
-			TLink<T>* tmp1 = l.pFirst;
-			while (tmp1 != l.pStop)
+			pStop = list.pStop;
+			pCurr = pPrev = pStop;
+			pos = 0;
+			TLink<T>* prev = new TLink<T>;
+			prev->val = list.pFirst->val;
+			prev->pNext = pStop;
+			pFirst = prev;
+			TLink<T>* curr = list.pFirst;
+			while (curr->pNext != pStop)
 			{
-				tmp1 = tmp1->pNext;
-				TLink<T>* tmp2 = new TLink<T>;
-				tmp2->pNext = pStop;
-				tmp2->val = tmp1->val;
-				tmp->pNext = tmp2;
-				tmp = tmp2;
+				curr = curr->pNext;
+				TLink<T>* link = new TLink<T>;
+				link->val = curr->val;
+				link->pNext = pStop;
+				prev->pNext = link;
+				prev = link;
 			}
-			pLast = tmp;
+			size = list.size;
+			pLast = prev;
 		}
 	}
 	friend std::ostream& operator<<(std::ostream& out, const TList<T> l)
@@ -116,15 +119,17 @@ public:
 			TLink<T>* t = pFirst;
 			pFirst = pFirst->pNext;
 			delete t;
+			size--;
 		}
-		size--;
 	}
 	void DelCurr()
 	{
 		if (pCurr == pStop || size == 0)
 			throw 0;
-		if (pCurr == pFirst)
+		if (pCurr == pFirst) {
 			DelFirst();
+			pCurr = pFirst;
+		}
 		else
 		{
 			TLink<T>* t = pCurr;
@@ -136,14 +141,22 @@ public:
 	}
 	void InsCurr(T elem)
 	{
-		if (size == 0)
+		if (size == 0) {
 			InsLast(elem);
+			pPrev = pLast;
+			pCurr = pPrev->pNext;
+		}
 		else
 			if (pCurr == pFirst)
-				InsFirst(elem);
+			{
+			InsFirst(elem);
+			pPrev = pFirst;
+			pCurr = pPrev->pNext;
+			}
 			else
 			{
 				TLink<T>* t = new TLink<T>;
+				pPrev->pNext = t;
 				t->val = elem;
 				t->pNext = pCurr;
 				pPrev = t;
@@ -161,8 +174,6 @@ public:
 	void Reset()
 	{
 		pCurr = pFirst;
-		//pPrev = pCurr;
-		//pCurr = pCurr->pNext;
 	}
 	bool IsEnd()
 	{

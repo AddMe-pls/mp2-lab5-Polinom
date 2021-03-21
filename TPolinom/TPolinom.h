@@ -26,7 +26,8 @@ public:
 			}
 			else
 			{
-				if (m == pCurr->val) {
+				if (m == pCurr->val) 
+				{
 					if (m.coeff + pCurr->val.coeff == 0)
 					{
 						DelCurr();
@@ -41,7 +42,7 @@ public:
 				GoNext();
 			}
 		}
-/*		for (Reset(); !IsEnd(); GoNext())
+		/*for (Reset(); !IsEnd(); GoNext())
 		{
 			if (m > pCurr->val)
 			{
@@ -101,8 +102,9 @@ public:
 					else
 					{
 						DelCurr();
-						curr = curr->pNext;
 					}
+						curr = curr->pNext;
+					
 				}
 				else GoNext();
 			}
@@ -144,12 +146,11 @@ public:
 	void print()
 	{
 		TLink<TMonom> *t = pFirst;
-		while (size != 0)
+		while (t->pNext != pHead)
 		{
 			if (t->val.coeff != 0) {
 				std::cout << t->val << " ";
 				t = t->pNext;
-				size--;
 			}
 		}
 		std::cout<<std::endl;
